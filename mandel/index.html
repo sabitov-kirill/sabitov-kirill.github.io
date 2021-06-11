@@ -72,7 +72,8 @@
       mouseDragY,
       mouseDragging,
       oldMouseX,
-      oldMouseY;
+      oldMouseY,
+      is_shader_loaded;
 
     function initGL(canvas) {
       try {
@@ -89,66 +90,68 @@
       pMatrix = mat4.create();
     }
 
-    function getShader(gl, id) {
-      var shaderScript = document.getElementById(id);
-      if (!shaderScript) {
-        return null;
-      }
+    function createShader(shader_path, shader_type) {
+      return new Promise(function (resolve, reject) {
+        let shd;
 
-      var str = "";
-      var k = shaderScript.firstChild;
-      while (k) {
-        if (k.nodeType == 3) {
-          str += k.textContent;
-        }
-        k = k.nextSibling;
-      }
+        window.fetch(shader_path)
+          .then((response) => {
+            return response.text();
+          })
+          .then((file_text) => {
+            if (shader_type == "fragment")
+              shd = gl.createShader(gl.FRAGMENT_SHADER);
+            else if (shader_type == "vertex")
+              shd = gl.createShader(gl.VERTEX_SHADER);
+            else
+              reject(shd); //shd type error
 
-      var shader;
-      if (shaderScript.type == "x-shader/x-fragment") {
-        shader = gl.createShader(gl.FRAGMENT_SHADER);
-      } else if (shaderScript.type == "x-shader/x-vertex") {
-        shader = gl.createShader(gl.VERTEX_SHADER);
-      } else {
-        return null;
-      }
+            gl.shaderSource(shd, file_text);
+            gl.compileShader(shd);
 
-      gl.shaderSource(shader, str);
-      gl.compileShader(shader);
+            if (!gl.getShaderParameter(shd, gl.COMPILE_STATUS)) {
+              alert("ERROR.\n" + "SHADER TYPE: " + shaderScript.type + "\n\n" + gl.getShaderInfoLog(shd));
+              reject(shd);
+            }
 
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        alert("ERROR.\n" +
-          "SHADER TYPE: " + shaderScript.type + "\n\n" +
-          gl.getShaderInfoLog(shader));
-        return null;
-      }
-
-      return shader;
+            resolve(shd);
+          });
+      });
     }
 
     function initShaders() {
-      var fragmentShader = getShader(gl, "shader-fs");
-      var vertexShader = getShader(gl, "shader-vs");
+      let shaders_info =
+        [
+          { Path: 'shaders/vertex.glsl', Type: "vertex" },
+          { Path: 'shaders/fragment.glsl', Type: "fragment" }
+        ];
 
-      shaderProgram = gl.createProgram();
-      gl.attachShader(shaderProgram, vertexShader);
-      gl.attachShader(shaderProgram, fragmentShader);
-      gl.linkProgram(shaderProgram);
+      let creation_requests = shaders_info.map(shader_info => createShader(shader_info.Path, shader_info.Type));
 
-      if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-        alert("Could not initialise shaders");
-      }
+      Promise.all(creation_requests)
+        .then(shaders => {
+          shaderProgram = gl.createProgram();
+          for (let shader of shaders)
+            gl.attachShader(shaderProgram, shader);
+          gl.linkProgram(shaderProgram);
 
-      gl.useProgram(shaderProgram);
+          if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+            alert("Could not initialise shaders");
+          }
 
-      shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-      gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+          gl.useProgram(shaderProgram);
 
-      // Getting all uniform locations
-      shaderProgram.resolutionLocation = gl.getUniformLocation(shaderProgram, 'resolution');
-      shaderProgram.zoomLocation = gl.getUniformLocation(shaderProgram, 'zoom');
-      shaderProgram.offsetLocation = gl.getUniformLocation(shaderProgram, 'offset');
-      shaderProgram.iterationLocation = gl.getUniformLocation(shaderProgram, 'iterations');
+          shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+          gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+
+          // Getting all uniform locations
+          shaderProgram.resolutionLocation = gl.getUniformLocation(shaderProgram, 'resolution');
+          shaderProgram.zoomLocation = gl.getUniformLocation(shaderProgram, 'zoom');
+          shaderProgram.offsetLocation = gl.getUniformLocation(shaderProgram, 'offset');
+          shaderProgram.iterationLocation = gl.getUniformLocation(shaderProgram, 'iterations');
+
+          is_shader_loaded = true;
+        });
     }
 
     function setMatrixUniforms() {
@@ -175,13 +178,15 @@
     }
 
     function drawScene() {
-      gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      if (is_shader_loaded) {
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-      gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-      setMatrixUniforms();
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
+        gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        setMatrixUniforms();
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
+      }
     }
 
     function tick() {
@@ -191,6 +196,7 @@
 
     function webGLStart() {
       canvas = document.getElementById("wegl-canvas");
+      is_shader_loaded = false;
       initGL(canvas);
       initShaders();
       initBuffers();
