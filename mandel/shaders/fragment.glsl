@@ -4,6 +4,10 @@ uniform float zoom;
 uniform vec2 resolution;
 uniform vec2 offset;
 uniform int iterations;
+uniform vec3 ins_col;
+uniform vec3 out_col;
+uniform vec3 back_col;
+uniform float col_blend;
 
 float GetMandelbrot(vec2 pos, float zoom, vec2 offset)
 {
@@ -33,11 +37,11 @@ void main( void )
   vec2 position = - 1.0 + 2.0 * gl_FragCoord.xy / resolution.xy;
   position.x *= aspectRatio;
 
-  gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+  gl_FragColor = vec4(0.0);
 
   float scale = GetMandelbrot(position, zoom, offset);
   if (scale == 0.0)
-    gl_FragColor = vec4( 0.0, 0.0, 0.0, 1.0 );
+    gl_FragColor = vec4(ins_col, 1.0);
   else
-    gl_FragColor = vec4( 0.6, 0.8, 1.0, 0.0 ) * scale + vec4(0.0, 0.2, 0.4, 1.0);
+    gl_FragColor = vec4(out_col, 0.0) * scale * col_blend + vec4(back_col, 1.0);
 }
