@@ -1,0 +1,233 @@
+<html>
+
+<head>
+  <title>Fractal</title>
+
+  <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
+
+  <script id="shader-fs" type="x-shader/x-fragment">
+    precision highp float;
+
+    uniform float zoom;
+    uniform vec2 resolution;
+    uniform vec2 offset;
+    uniform int iterations;
+
+    float GetMandelbrot(vec2 pos, float zoom, vec2 offset)
+    {
+      vec2 C = offset + pos / zoom;                
+      vec2 Zn=vec2(0.0, 0.0);
+
+      for( int i = 0; i < 1000; ++i)
+      {
+        if (i >= iterations) break;
+
+        float x2 = Zn.x * Zn.x;
+        float y2 = Zn.y * Zn.y;
+        if (x2 + y2 > 4.0)
+        { 
+          return float(i + 1) / float(iterations + 1);
+        } 
+        
+        Zn.y = (Zn.y * Zn.x * 2.0) + C.y; 
+        Zn.x = (x2 - y2) + C.x; 
+      }
+      return 0.0;
+    }
+        
+    void main( void ) 
+    {
+      float aspectRatio = resolution.x / resolution.y;
+      vec2 position = - 1.0 + 2.0 * gl_FragCoord.xy / resolution.xy;
+      position.x *= aspectRatio;
+
+      gl_FragColor = vec4(0.0,0.0,0.0,0.0);
+
+      float scale = GetMandelbrot(position, zoom, offset);
+      if (scale == 0.0)
+        gl_FragColor = vec4( 0.0, 0.0, 0.0, 1.0 );
+      else
+        gl_FragColor = vec4( 0.6, 0.8, 1.0, 0.0 ) * scale + vec4(0.0, 0.2, 0.4, 1.0);
+    }
+  </script>
+
+  <script id="shader-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+
+    void main(void)
+    {
+      gl_Position = vec4(aVertexPosition, 1.0);
+    }
+  </script>
+
+  <script type="text/javascript">
+    var
+      gl,
+      checkers_cell_width,
+      shaderProgram,
+      fractalZoom,
+      iterationsCount,
+      mouseDragX,
+      mouseDragY,
+      mouseDragging,
+      oldMouseX,
+      oldMouseY;
+
+    function initGL(canvas) {
+      try {
+        gl = canvas.getContext("experimental-webgl");
+        gl.viewportWidth = canvas.width;
+        gl.viewportHeight = canvas.height;
+      } catch (e) {
+      }
+      if (!gl) {
+        alert("Could not initialise WebGL");
+      }
+
+      mvMatrix = mat4.create();
+      pMatrix = mat4.create();
+    }
+
+    function getShader(gl, id) {
+      var shaderScript = document.getElementById(id);
+      if (!shaderScript) {
+        return null;
+      }
+
+      var str = "";
+      var k = shaderScript.firstChild;
+      while (k) {
+        if (k.nodeType == 3) {
+          str += k.textContent;
+        }
+        k = k.nextSibling;
+      }
+
+      var shader;
+      if (shaderScript.type == "x-shader/x-fragment") {
+        shader = gl.createShader(gl.FRAGMENT_SHADER);
+      } else if (shaderScript.type == "x-shader/x-vertex") {
+        shader = gl.createShader(gl.VERTEX_SHADER);
+      } else {
+        return null;
+      }
+
+      gl.shaderSource(shader, str);
+      gl.compileShader(shader);
+
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        alert("ERROR.\n" +
+          "SHADER TYPE: " + shaderScript.type + "\n\n" +
+          gl.getShaderInfoLog(shader));
+        return null;
+      }
+
+      return shader;
+    }
+
+    function initShaders() {
+      var fragmentShader = getShader(gl, "shader-fs");
+      var vertexShader = getShader(gl, "shader-vs");
+
+      shaderProgram = gl.createProgram();
+      gl.attachShader(shaderProgram, vertexShader);
+      gl.attachShader(shaderProgram, fragmentShader);
+      gl.linkProgram(shaderProgram);
+
+      if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+        alert("Could not initialise shaders");
+      }
+
+      gl.useProgram(shaderProgram);
+
+      shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+      gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+
+      // Getting all uniform locations
+      shaderProgram.resolutionLocation = gl.getUniformLocation(shaderProgram, 'resolution');
+      shaderProgram.zoomLocation = gl.getUniformLocation(shaderProgram, 'zoom');
+      shaderProgram.offsetLocation = gl.getUniformLocation(shaderProgram, 'offset');
+      shaderProgram.iterationLocation = gl.getUniformLocation(shaderProgram, 'iterations');
+    }
+
+    function setMatrixUniforms() {
+      gl.uniform2f(shaderProgram.resolutionLocation, gl.viewportWidth, gl.viewportHeight);
+      gl.uniform1f(shaderProgram.zoomLocation, fractalZoom);
+      gl.uniform1i(shaderProgram.iterationLocation, iterationsCount);
+      gl.uniform2f(shaderProgram.offsetLocation, mouseDragX, mouseDragY);
+    }
+
+    var squareVertexPositionBuffer;
+
+    function initBuffers() {
+      squareVertexPositionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+      vertices = [
+        1.0, 1.0, 0.0,
+        -1.0, 1.0, 0.0,
+        1.0, -1.0, 0.0,
+        -1.0, -1.0, 0.0
+      ];
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+      squareVertexPositionBuffer.itemSize = 3;
+      squareVertexPositionBuffer.numItems = 4;
+    }
+
+    function drawScene() {
+      gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
+      gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+      setMatrixUniforms();
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
+    }
+
+    function tick() {
+      window.requestAnimationFrame(tick);
+      drawScene();
+    }
+
+    function webGLStart() {
+      var canvas = document.getElementById("wegl-canvas");
+      initGL(canvas);
+      initShaders();
+      initBuffers();
+
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.enable(gl.DEPTH_TEST);
+
+      mouseDragX = 0;
+      mouseDragY = 0;
+      fractalZoom = 1;
+      iterationsCount = 12 * 12;
+
+      drawScene();
+      tick();
+    }
+
+    function MouseDragging(e) {
+      if (mouseDragging) {
+        mouseDragX += -0.008 * (e.clientX - oldMouseX) / fractalZoom;
+        mouseDragY += 0.008 * (e.clientY - oldMouseY) / fractalZoom;
+        oldMouseX = event.clientX; oldMouseY = event.clientY;
+      }
+    }
+
+    function IterationsCountChange(e) {
+      iterationsCount = e.value;
+    }
+  </script>
+</head>
+
+
+<body onload="webGLStart();">
+  <canvas id="wegl-canvas" style="background-color: #000000; width: 100%; height: 100%" height="720" width="1240"
+    onwheel="fractalZoom=Math.max(fractalZoom * (event.deltaY > 0 ? 1.25 : 0.8), 0.1);"
+    onmousedown="mouseDragging=true;oldMouseX=event.clientX; oldMouseY=event.clientY" onmouseup="mouseDragging=false"
+    onmousemove="MouseDragging(event);"></canvas>
+
+  <lable>Iterations Count: </lable><input type="number" onchange="IterationsCountChange(event)">
+</body>
+
+</html>
