@@ -4,22 +4,38 @@
   <meta charset="utf-8" />
   <title>SummerPractice'CGSG2021'KS6</title>
   <link rel="stylesheet" href="./index.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/core.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
+  <script>
+    function setAvatarURL() {
+      let ava = document.getElementById("avatar");
+      ava.src = "https://www.gravatar.com/avatar/" + CryptoJS.MD5("sabkirul@gmail.com").toString();
+    }
+  </script>
 </head>
 
-<body>
-  <div style="position: relative; left: 5%;">
-    <a class="title">Sabitov Kirill 10-6.</a>
+<body onload="setAvatarURL();">
+  <div style="position: fixed; top: 0px; width: 35%; height: 100%; left: 2.5%; background-color: lightslategrey"></div>
+
+  <div style="position: relative; left: 5%; width: 30%;">
+    <img id="avatar" style="border-radius: 50%; height: 30px;">
+    <a style="font-size: 35px; font-family: Impact;">Sabitov Kirill 10-6.</a>
   </div>
-  <div style="position: relative; left: 5%;">
-    <a class="title">Works made during the summer educational and research practice in the computer graphics support group of the Physics and Mathematics Lyceum 30.</a>
+  <div style="position: relative; left: 5%; width: 30%; font-family: 'Trebuchet MS';">
+    <a class="title">Works made during the summer educational and research practice in the computer graphics support
+      group of the Physics and Mathematics Lyceum 30.</a>
   </div>
-  <div style="position: relative; left: 5%;">
+  <div style="position: fixed; bottom: 0px; left: 5%;">
     <img src="images/cgsg100.png">
   </div>
 
-  <div style="position: fixed; top: 25%; left: 5%;">
+  <div style="position: relative; margin-top: 5%; left: 5%;">
     <form method="LINK" action="./mandel/mandelbrot.html">
-      <input type="submit" class="button" value="Mandelbrot.">
+      <input type="submit" class="button" style="width: 15%; text-align: center;" value="Mandelbrot.">
+    </form>
+    <form method="LINK" action="./calendar/calendar.html">
+      <input type="submit" class="button" style="width: 15%;" value="Calendar.">
     </form>
   </div>
 </body>

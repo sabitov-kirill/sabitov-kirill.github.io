@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <link rel="stylesheet" href="./calendar.css">
+
+  <script>
+    class Calendar {
+      constructor() {
+        this.currentData = new Date();
+        this.monthNames = ["January", "February", "March", "April", "May", "June",
+          "July", "August", "September", "October", "November", "December"];
+      }
+
+      getMonthDaysCount(y, x) {
+        return 28 + ((x + Math.floor(x / 8)) % 2) + 2 % x + Math.floor((1 + (1 - (y % 4 + 2) % (y % 4 + 1)) * ((y % 100 + 2) % (y % 100 + 1)) + (1 - (y % 400 + 2) % (y % 400 + 1))) / x) + Math.floor(1 / x) - Math.floor(((1 - (y % 4 + 2) % (y % 4 + 1)) * ((y % 100 + 2) % (y % 100 + 1)) + (1 - (y % 400 + 2) % (y % 400 + 1))) / x);
+      }
+
+      getWeekDay(date) {
+        let week_day;
+
+        if (date.getDay() == 0) week_day = 7;
+        else week_day = date.getDay();
+
+        return week_day;
+      }
+
+      setYear(year) {
+        let year_text = document.getElementById("year");
+        year_text.innerHTML = year;
+      }
+
+      setMonth(month) {
+        let month_text = document.getElementById("month");
+        month_text.innerHTML = this.monthNames[month] + "\n";
+      }
+
+      setDay(day, first_day) {
+        let days_table = document.getElementById("days_table");
+        let week_day = this.getWeekDay(day);
+
+        days_table.children[Math.floor((day.getDate() + first_day - 1) / 7 - 0.01)].
+          children[week_day - 1].classList.add("active");
+      }
+
+      displayDate() {
+        let first_date = new Date(this.currentData.getFullYear(), this.currentData.getMonth(), 1);
+        let days_count = this.getMonthDaysCount(this.currentData.getFullYear(), this.currentData.getMonth() + 1);
+        let days_table = document.getElementById("days_table");
+        let first_day = this.getWeekDay(first_date);
+
+        /* Clearing all table elements */
+        while (days_table.firstChild) {
+          days_table.removeChild(days_table.firstChild);
+        }
+
+        /* Placing days */
+        for (let week_count = 0, count = 0; week_count < 6; week_count++) {
+          let days_row = document.createElement("tr");
+
+          for (let day_count = 0; day_count < 7; day_count++) {
+            let day_elem = document.createElement("th");
+
+            if (count >= first_day - 1 && count <= days_count) {
+              day_elem.innerText = first_date.getDate();
+              first_date.setDate(first_date.getDate() + 1);
+            }
+            days_row.appendChild(day_elem);
+            day_elem.width = days_table.width / 7;
+            count++;
+          }
+          days_table.appendChild(days_row);
+        }
+
+        /* Setting selected data */
+        this.setYear(this.currentData.getFullYear());
+        this.setMonth(this.currentData.getMonth());
+        this.setDay(this.currentData, first_day);
+      }
+
+      monthNext() {
+        this.currentData.setMonth(this.currentData.getMonth() + 1);
+        this.displayDate();
+      }
+
+      monthPrev() {
+        this.currentData.setMonth(this.currentData.getMonth() - 1);
+        this.displayDate();
+      }
+    }
+
+    let calendar;
+
+    function init() {
+      calendar = new Calendar();
+
+      calendar.displayDate();
+    }
+
+    function onDateChange(dateString) {
+      calendar.currentData = new Date(dateString);
+
+      calendar.displayDate();
+    }
+  </script>
+</head>
+
+<body onload="init();">
+  <div>
+    <div class="month">
+      <ul>
+        <li>
+          <input class="prev button" type="button" onclick="calendar.monthPrev();" value="&#10094;">
+        </li>
+        <li>
+          <input class="next button" type="button" onclick="calendar.monthNext();" value="&#10095;">
+        </li>
+        <li>
+          <p id="month"></p>
+          <p id="year" style="font-size:18px"></p>
+        </li>
+      </ul>
+    </div>
+
+    <ul class="weekdays">
+      <li>Mo</li>
+      <li>Tu</li>
+      <li>We</li>
+      <li>Th</li>
+      <li>Fr</li>
+      <li>Sa</li>
+      <li>Su</li>
+    </ul>
+
+    <table class="days" id="days_table"></table>
+  </div>
+
+  <label>
+    Enter Data:
+    <input type="date" onchange="onDateChange(this.value);">
+  </label>
+
+</body>
+
+</html>

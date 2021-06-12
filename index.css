@@ -1,5 +1,5 @@
 body {
-  background-color: dimgrey;
+  background-color: rgb(255, 255, 255);
 }
 
 .title span {
@@ -10,7 +10,7 @@ body {
 }
 
 .button {
-  background-color: #4CAF50; /* Green */
+  background-color: #0a4d49; /* Green */
   border: none;
   color: white;
   padding: 15px 32px;
