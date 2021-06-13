@@ -16,26 +16,27 @@
 </head>
 
 <body onload="setAvatarURL();">
-  <div style="position: fixed; top: 0px; width: 35%; height: 100%; left: 2.5%; background-color: lightslategrey"></div>
+  <div class="info_pane">
+    <div style="position: relative; margin-left: 15px; width: 90%;">
+      <img id="avatar" style="border-radius: 50%; height: 30px;">
+      <a class="title" style="font-size: 35px; font-family: Impact;">Sabitov Kirill 10-6</a>
+      <p>
+        This page is result of the summer educational and research practice in the Computer Graphics Support Group of the Physics and Mathematics Lyceum #30.
+      </p>
+    </div>
+  
+    <div style="position: relative; width: 70%; margin-top: 15%; margin: 100px auto 0 auto;">
+      <p class="title">Projects:</p>
+      <form method="LINK" action="./mandel/mandelbrot.html">
+        <input type="submit" class="button" value="Mandelbrot" style="width: 100%;"> 
+      </form>
+      <form method="LINK" action="./calendar/calendar.html">
+        <input type="submit" class="button" value="Calendar" style="width: 100%;">
+      </form>
+    </div>
 
-  <div style="position: relative; left: 5%; width: 30%;">
-    <img id="avatar" style="border-radius: 50%; height: 30px;">
-    <a style="font-size: 35px; font-family: Impact;">Sabitov Kirill 10-6.</a>
-  </div>
-  <div style="position: relative; left: 5%; width: 30%; font-family: 'Trebuchet MS';">
-    <a class="title">Works made during the summer educational and research practice in the computer graphics support
-      group of the Physics and Mathematics Lyceum 30.</a>
-  </div>
-  <div style="position: fixed; bottom: 0px; left: 5%;">
-    <img src="images/cgsg100.png">
-  </div>
-
-  <div style="position: relative; margin-top: 5%; left: 5%;">
-    <form method="LINK" action="./mandel/mandelbrot.html">
-      <input type="submit" class="button" style="width: 15%; text-align: center;" value="Mandelbrot.">
-    </form>
-    <form method="LINK" action="./calendar/calendar.html">
-      <input type="submit" class="button" style="width: 15%;" value="Calendar.">
-    </form>
+    <div style="position: relative; width: fit-content; margin: 100% auto 0 auto;">
+      <img src="images/cgsg100.png">
+    </div>
   </div>
 </body>

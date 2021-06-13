@@ -51,6 +51,10 @@
       let first_day = this.getWeekDay(first_date);
       let week_day = getWeekDay(date);
 
+      /* Deleting current active day */
+      days_table.children[1 + Math.floor((date.getDate() + first_day - 1) / 7 - 0.01)].
+        children[week_day - 1].classList.
+
       /* Changin calendar current displayng day */
       calendarDisplayngDate = date;
 
@@ -150,7 +154,7 @@
 
       <td colspan="5">
         <p class="text" id="month"></p>
-        <input class="text" id="year" type="text" onchange="eventYearChange();"></p>
+        <input class="text" id="year" type="number" onchange="eventYearChange();"></p>
       </td>
 
       <td>

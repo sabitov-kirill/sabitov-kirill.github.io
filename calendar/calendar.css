@@ -1,5 +1,5 @@
 * {box-sizing: border-box;}
-body {font-family: Verdana, sans-serif;}
+body { font-family: Verdana, sans-serif; }
 
 .calendar {
   background: #eee;
@@ -23,6 +23,7 @@ body {font-family: Verdana, sans-serif;}
 }
 
 .info_row .button {
+  transition: background-color 0.5s;
   background-color: #00000000;
   border: none;
   color: white;
@@ -32,7 +33,7 @@ body {font-family: Verdana, sans-serif;}
 }
 
 .info_row .button:hover {
-  background-color: #c9c9c9b4;
+  background-color: #c9c9c986;
   border-style: solid;
   border: 0px;
   border-radius: 5px;
@@ -45,16 +46,21 @@ body {font-family: Verdana, sans-serif;}
   letter-spacing: 3px;
 }
 
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 #year {
   color: #777;
   border: 0px;
   font-size: 25px;
   background-color: rgba(255, 255, 255, 0);
+  transition: transform 1s, color 1s;
 }
 
 #year:focus {
   outline: none;
-  transition: transform 1s, color 1s;
   color: #666;
   transform: scale(1.5);
 }
@@ -71,7 +77,12 @@ body {font-family: Verdana, sans-serif;}
   color: #666;
 }
 
+.day_elem {
+  transition: background-color 0.7s;
+}
+
 .day_elem:hover {
+  transition: background-color 0.2s;
   background-color: #c9c9c9b2;
 }
 
