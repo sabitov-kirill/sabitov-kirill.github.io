@@ -1,9 +1,11 @@
 body {
   background-color: rgb(255, 255, 255);
   font-family: Verdana, sans-serif; 
+  
 }
 
 .info_pane {
+  box-shadow: 0 10px 2.5rem rgb(27, 64, 94);
   color: #777;
   position: fixed; 
   top: 0px; 
