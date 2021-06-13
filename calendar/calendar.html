@@ -6,140 +6,169 @@
   <link rel="stylesheet" href="./calendar.css">
 
   <script>
-    class Calendar {
-      constructor() {
-        this.currentData = new Date();
-        this.monthNames = ["January", "February", "March", "April", "May", "June",
-          "July", "August", "September", "October", "November", "December"];
+
+    // Get count of days in month
+    function getMonthDaysCount(y, x) {
+      return 28 + ((x + Math.floor(x / 8)) % 2) + 2 % x 
+        + Math.floor((1 + (1 - (y % 4 + 2) % (y % 4 + 1)) * ((y % 100 + 2) % (y % 100 + 1)) 
+        + (1 - (y % 400 + 2) % (y % 400 + 1))) / x) + Math.floor(1 / x) 
+        - Math.floor(((1 - (y % 4 + 2) % (y % 4 + 1)) * ((y % 100 + 2) % (y % 100 + 1)) 
+        + (1 - (y % 400 + 2) % (y % 400 + 1))) / x);
+    }
+
+    // Getting date week day in normal format (Mo - Sa)
+    function getWeekDay(date) {
+      let week_day = date.getDay();
+      return week_day == 0 ? 7 : week_day;
+    }
+
+    /* Calendar Data */
+    const calendarMonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    let calendarDisplayngDate;
+
+    // Change year text on calendar information row 
+    function calendarSetYearText(year) {
+      let year_text = document.getElementById("year");
+      year_text.value = year;
+
+      /* Changin calendar current displayng year */
+      calendarDisplayngDate = new Date(year, calendarDisplayngDate.getMonth(), calendarDisplayngDate.getDate());
+    }
+
+    // Change month text on calendar information row 
+    function calendarSetMonthText(month) {
+      let month_text = document.getElementById("month");
+      month_text.innerText = calendarMonthNames[month] + "\n";
+
+      /* Changin calendar current displayng month */
+      calendarDisplayngDate = new Date(calendarDisplayngDate.getFullYear(), month, calendarDisplayngDate.getDate());
+    }
+
+    // Set active (highlight) day function
+    function calendarSetActiveDay(date) {
+      let days_table = document.getElementById("days_table");
+      let first_date = new Date(date.getFullYear(), date.getMonth(), 1);
+      let first_day = this.getWeekDay(first_date);
+      let week_day = getWeekDay(date);
+
+      /* Changin calendar current displayng day */
+      calendarDisplayngDate = date;
+
+      days_table.children[1 + Math.floor((date.getDate() + first_day - 1) / 7 - 0.01)].
+        children[week_day - 1].classList.add("active");
+    }
+
+    // Setting month days table function
+    function calendarSetMonthPage(date) {
+      let first_date = new Date(date.getFullYear(), date.getMonth(), 1);
+      let first_day = this.getWeekDay(first_date);
+      let days_count = this.getMonthDaysCount(date.getFullYear(), date.getMonth() + 1);
+      let days_table = document.getElementById("days_table");
+
+      /* Clearing all table elements, exept informational row */
+      for (let row = 1; row < 7; row++) {
+        if (days_table.children[1])
+          days_table.removeChild(days_table.children[1]);
       }
 
-      getMonthDaysCount(y, x) {
-        return 28 + ((x + Math.floor(x / 8)) % 2) + 2 % x + Math.floor((1 + (1 - (y % 4 + 2) % (y % 4 + 1)) * ((y % 100 + 2) % (y % 100 + 1)) + (1 - (y % 400 + 2) % (y % 400 + 1))) / x) + Math.floor(1 / x) - Math.floor(((1 - (y % 4 + 2) % (y % 4 + 1)) * ((y % 100 + 2) % (y % 100 + 1)) + (1 - (y % 400 + 2) % (y % 400 + 1))) / x);
-      }
+      /* Filling 6 weeks */
+      for (let week_count = 0, count = 0; week_count < 6; week_count++) {
+        let days_row = document.createElement("tr");
 
-      getWeekDay(date) {
-        let week_day;
+        /* Filling one week row */ 
+        for (let day_count = 0; day_count < 7; day_count++) {
+          let day_elem = document.createElement("td");
 
-        if (date.getDay() == 0) week_day = 7;
-        else week_day = date.getDay();
+          /* Check if current placing day is placing right and filling it  */   
+          if (count >= first_day - 1 && count <= first_day + days_count - 2) {
+            day_elem.innerText = first_date.getDate();
+            day_elem.classList.add("day_elem");
 
-        return week_day;
-      }
-
-      setYear(year) {
-        let year_text = document.getElementById("year");
-        year_text.innerHTML = year;
-      }
-
-      setMonth(month) {
-        let month_text = document.getElementById("month");
-        month_text.innerHTML = this.monthNames[month] + "\n";
-      }
-
-      setDay(day, first_day) {
-        let days_table = document.getElementById("days_table");
-        let week_day = this.getWeekDay(day);
-
-        days_table.children[Math.floor((day.getDate() + first_day - 1) / 7 - 0.01)].
-          children[week_day - 1].classList.add("active");
-      }
-
-      displayDate() {
-        let first_date = new Date(this.currentData.getFullYear(), this.currentData.getMonth(), 1);
-        let days_count = this.getMonthDaysCount(this.currentData.getFullYear(), this.currentData.getMonth() + 1);
-        let days_table = document.getElementById("days_table");
-        let first_day = this.getWeekDay(first_date);
-
-        /* Clearing all table elements */
-        while (days_table.firstChild) {
-          days_table.removeChild(days_table.firstChild);
-        }
-
-        /* Placing days */
-        for (let week_count = 0, count = 0; week_count < 6; week_count++) {
-          let days_row = document.createElement("tr");
-
-          for (let day_count = 0; day_count < 7; day_count++) {
-            let day_elem = document.createElement("th");
-
-            if (count >= first_day - 1 && count <= days_count) {
-              day_elem.innerText = first_date.getDate();
-              first_date.setDate(first_date.getDate() + 1);
-            }
-            days_row.appendChild(day_elem);
-            day_elem.width = days_table.width / 7;
-            count++;
+            first_date.setDate(first_date.getDate() + 1);
           }
-          days_table.appendChild(days_row);
+
+          /* Adding created day to week row */
+          days_row.appendChild(day_elem);
+          count++;
         }
 
-        /* Setting selected data */
-        this.setYear(this.currentData.getFullYear());
-        this.setMonth(this.currentData.getMonth());
-        this.setDay(this.currentData, first_day);
-      }
-
-      monthNext() {
-        this.currentData.setMonth(this.currentData.getMonth() + 1);
-        this.displayDate();
-      }
-
-      monthPrev() {
-        this.currentData.setMonth(this.currentData.getMonth() - 1);
-        this.displayDate();
+        /* Adding created week row to table */
+        days_table.appendChild(days_row);
       }
     }
 
-    let calendar;
+    // Diaplay date on calendar function
+    function calendarSetDate(date) {
+      /* Setting current displaing calendar date */
+      calendarDisplayngDate = date;
+
+      /* Filling month days table */
+      calendarSetMonthPage(date);
+      
+      /* Setting selected data */
+      calendarSetYearText(date.getFullYear());
+      calendarSetMonthText(date.getMonth());
+      calendarSetActiveDay(date);
+    }
+
+    // Switching calendar displaying month to next
+    function calendarMonthNext() {
+      calendarDisplayngDate.setMonth(calendarDisplayngDate.getMonth() + 1);
+
+      calendarSetDate(calendarDisplayngDate);
+    }
+
+    // Switching calendar displaying month to previous
+    function calendarMonthPrev() {
+      calendarDisplayngDate.setMonth(calendarDisplayngDate.getMonth() - 1);
+
+      calendarSetDate(calendarDisplayngDate);
+    }
 
     function init() {
-      calendar = new Calendar();
+      nowDate = new Date();
 
-      calendar.displayDate();
+      calendarSetDate(nowDate);
     }
 
-    function onDateChange(dateString) {
-      calendar.currentData = new Date(dateString);
+    function eventYearChange() {
+      let year_field = document.getElementById("year");
+      dateToDisplay = new Date(year_field.value, calendarDisplayngDate.getMonth(), calendarDisplayngDate.getDate());
 
-      calendar.displayDate();
+      calendarSetDate(dateToDisplay);
     }
   </script>
 </head>
 
 <body onload="init();">
-  <div>
-    <div class="month">
-      <ul>
-        <li>
-          <input class="prev button" type="button" onclick="calendar.monthPrev();" value="&#10094;">
-        </li>
-        <li>
-          <input class="next button" type="button" onclick="calendar.monthNext();" value="&#10095;">
-        </li>
-        <li>
-          <p id="month"></p>
-          <p id="year" style="font-size:18px"></p>
-        </li>
-      </ul>
-    </div>
+  <table class="calendar" id="days_table">
 
-    <ul class="weekdays">
-      <li>Mo</li>
-      <li>Tu</li>
-      <li>We</li>
-      <li>Th</li>
-      <li>Fr</li>
-      <li>Sa</li>
-      <li>Su</li>
-    </ul>
+    <tr class="info_row">
+      <td>
+        <input class="button prev" type="button" onclick="calendarMonthPrev();" value="&#10094;">
+      </td>
 
-    <table class="days" id="days_table"></table>
-  </div>
+      <td colspan="5">
+        <p class="text" id="month"></p>
+        <input class="text" id="year" type="text" onchange="eventYearChange();"></p>
+      </td>
 
-  <label>
-    Enter Data:
-    <input type="date" onchange="onDateChange(this.value);">
-  </label>
+      <td>
+        <input class="button next" type="button" onclick="calendarMonthNext();" value="&#10095;">
+      </td>
+    </tr>
+
+    <tr class="weekdays">
+      <td>Mo</td>
+      <td>Tu</td>
+      <td>We</td>
+      <td>Th</td>
+      <td>Fr</td>
+      <td>Sa</td>
+      <td>Su</td>
+    </tr>
+
+  </table>
 
 </body>
 
