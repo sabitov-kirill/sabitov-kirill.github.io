@@ -47,17 +47,22 @@
     // Set active (highlight) day function
     function calendarSetActiveDay(date) {
       let days_table = document.getElementById("days_table");
-      let first_date = new Date(date.getFullYear(), date.getMonth(), 1);
-      let first_day = this.getWeekDay(first_date);
-      let week_day = getWeekDay(date);
 
       /* Deleting current active day */
-      days_table.children[1 + Math.floor((date.getDate() + first_day - 1) / 7 - 0.01)].
-        children[week_day - 1].classList.
+      for (let week = 0; week < 6; week++)
+        if (days_table.children[week])
+          for (let day = 0; day < 7; day++)
+            if (days_table.children[week].children[day])
+              days_table.children[week].children[day].classList.remove("active");
 
       /* Changin calendar current displayng day */
       calendarDisplayngDate = date;
 
+      /* Making new date active */
+      let first_date = new Date(date.getFullYear(), date.getMonth(), 1);
+      let first_day = this.getWeekDay(first_date);
+      let week_day = getWeekDay(date);
+      
       days_table.children[1 + Math.floor((date.getDate() + first_day - 1) / 7 - 0.01)].
         children[week_day - 1].classList.add("active");
     }

@@ -14,7 +14,7 @@ float GetMandelbrot(vec2 pos, float zoom, vec2 offset)
   vec2 C = offset + pos / zoom;                
   vec2 Zn=vec2(0.0, 0.0);
 
-  for( int i = 0; i < 1000; ++i)
+  for( int i = 0; i < 1000000000; ++i)
   {
     if (i >= iterations) break;
 

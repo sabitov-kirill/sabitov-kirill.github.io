@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <title>Mandelbrot Fractal</title>
-  <link rel="stylesheet" href="interface.css">
+  <link rel="stylesheet" href="mandelbrot.css">
 
   <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
   <script type="text/javascript">
@@ -177,7 +177,7 @@
       iterationsCount = 12 * 12;
       fractalInsColor = hexToRgb("361111");
       fractalOutColor = hexToRgb("df4edf");
-      backColor = hexToRgb("998a8a");
+      backColor = hexToRgb("ffffff");
       fractalColorBlend = 6;
 
       canvas = document.getElementById("wegl-canvas");
@@ -263,7 +263,7 @@
      * Returns: None.
      */
     function canvasResize(e) {
-      canvas.width = window.innerWidth * 0.8;
+      canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
       gl.viewportWidth = canvas.width;
@@ -282,57 +282,77 @@
         oldMouseX = event.clientX; oldMouseY = event.clientY;
       }
     }
+
+    function iterationsChange(value) {
+      let iterations_changer = document.getElementById("iterations_changer");
+
+      iterations_changer.value=value;
+      if (iterations_changer.value > 0 && Number.isInteger(Number(iterations_changer.value))) {
+        iterationsCount=iterations_changer.value;
+        iterations_changer.classList.remove("wrong");
+      } else {
+        iterations_changer.classList.add("wrong");
+      }
+    }
+
+    function zoomChange(value) {
+      let zoom_changer = document.getElementById("zoom_changer");
+
+      zoom_changer.value=Number(value).toFixed(1);
+      if (zoom_changer.value > 0.1){
+        fractalZoom=zoom_changer.value;
+        zoom_changer.classList.remove("wrong");
+      } else {
+        zoom_changer.classList.add("wrong");
+      }
+    }
   </script>
 </head>
 
 
 <body onload="webGLStart();">
-  <canvas id="wegl-canvas" style="position: fixed; top: 0px; right: 0px; border: 0px; width: 80%; height: 100%;"
-    onwheel="fractalZoom=Math.max(fractalZoom * (event.deltaY > 0 ? 1.25 : 0.8), 0.1);"
+  <canvas id="wegl-canvas" style="position: fixed; top: 0px; right: 0px; border: 0px; width: 88%; height: 100%; cursor: move"
+    onwheel="zoomChange(Math.max(fractalZoom * (event.deltaY > 0 ? 1.25 : 0.8), 0.1));"
     onmousedown="isMouseDragging=true;oldMouseX=event.clientX; oldMouseY=event.clientY"
     onmouseup="isMouseDragging=false" onmousemove="mouseDragging(event);" onresize="canvasResize(event);"></canvas>
 
-  <div>
+  <div class="control_pane">
     <a class="title" style="font-size: 25px;">Fractal Settings</a>
-  </div>
+  
+    <div>
+      <lable class="text">Iterations Count<br></lable>
+      <input id="iterations_changer" class="input" value="144" type="number" onchange="iterationsChange(this.value);"style="width: 75px;">
+    </div>
 
-  <div>
-    <lable class="text" style="position: sticky; width: 20%;">Iterations Count: </lable>
-    <input id="iterations_changer" class="input" value="144" type="number" onchange="iterationsCount=this.value;"
-      style="width: 75px;">
-  </div>
+    <div>
+      <label class="text">Fractal Zoom<br></label>
+      <input id="zoom_changer" class="input" value="1" type="number" onchange="zoomChange(this.value);"style="width: 75px;">
+    </div>
+  
+    <div>
+      <label class="text">Fractal Insight Color<br></label>
+      <input type="color" value="#361111" onchange="fractalInsColor=hexToRgb(this.value.split('#').join(''));">
+    </div>
 
-  <div>
-    <label id="fractalZoomLabel" class="text" style="position: sticky; width: 20%;">Fractal Zoom: </label>
-    <input id="zoom_changer" class="input" value="1" type="number" onchange="fractalZoom=this.value;"
-      style="width: 75px;">
-  </div>
+    <div>
+      <label class="text">Fractal Outsight Color<br></label>
+      <input type="color" value="#df4edf" onchange="fractalOutColor=hexToRgb(this.value.split('#').join(''));">
+    </div>
 
-  <div>
-    <label class="text" style="position: sticky; width: 20%;">Fractal Insight Color: </label>
-    <input type="color" value="#361111" onchange="fractalInsColor=hexToRgb(this.value.split('#').join(''));">
-  </div>
-  <div>
-    <label class="text" style="position: sticky; width: 20%;">Fractal Outsight Color: </label>
-    <input type="color" value="#df4edf" onchange="fractalOutColor=hexToRgb(this.value.split('#').join(''));">
-  </div>
-  <div>
-    <label class="text" style="position: sticky; width: 20%;">Background Color: </label>
-    <input type="color" value="#998a8a" onchange="backColor=hexToRgb(this.value.split('#').join(''));">
-  </div>
+    <div>
+      <label class="text">Background Color<br></label>
+      <input type="color" value="#ffffff" onchange="backColor=hexToRgb(this.value.split('#').join(''));">
+    </div>
 
-  <div>
-    <label class="text" style="position: sticky; width: 20%;">Blending: </label>
-    <input type="range" value="6" min="0.5" max="20" onchange="fractalColorBlend=this.value">
-  </div>
+    <div>
+      <label class="text">Blending<br></label>
+      <input class="range" type="range" value="6" min="0.5" max="20" onchange="fractalColorBlend=this.value">
+    </div>
 
-  <div>
-    <button class="button" onclick="cameraSetDefualt();"
-      style="position: sticky; width: calc(20% - 15px); height: 65px;">Set Default Camera Location</button>
+    <div>
+      <button class="button" onclick="cameraSetDefualt();">Set Default Camera Location</button>
+    </div>
   </div>
-
-  <label style="position: fixed; bottom: 100px; left: 0px; font-size: 20px;">CGSG FOREVER!!!</label>
-  <img style="position: fixed; bottom: 0px; left: 0px;" src="../images/cgsg100.png">
 </body>
 
 </html>
