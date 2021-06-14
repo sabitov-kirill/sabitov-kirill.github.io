@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Messenger</title>
+  <script>
+    function sendMessage() {
+      let name_changer = document.getElementById("name");
+      let message_changer = document.getElementById("message");
+
+      let msg = { name: name_changer.value, message: message_changer.value };
+
+      fetch("/msg", {
+        method: "POST",
+        headers: { "Contet-Type": "application/json;charset=utf-8" },
+        body: JSON.stringify(msg)
+      });
+    }
+
+    function getMessages() {
+      fetch("/msg", { method: "GET" })
+        .then((result) => {
+          return result.text();
+        })
+        .then((text) => {
+          let messages_pane = document.getElementById("messages_pane");
+          messages_pane.innerHTML = text;
+
+          tick();
+        });
+    }
+
+    function tick() {
+      setTimeout(getMessages, 500);
+    }
+  </script>
+</head>
+
+<body onload="tick();">
+  <input type="text" id="name" /><br>
+  <input type="text" id="message" /><br>
+  <button onclick="sendMessage();">Send Message</button>
+  <button onclick="getMessages();">Get Messages</button><br><br>
+  <p id="messages_pane"></p>
+</body>
+
+</html>

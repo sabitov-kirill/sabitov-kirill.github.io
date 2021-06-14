@@ -286,9 +286,9 @@
     function iterationsChange(value) {
       let iterations_changer = document.getElementById("iterations_changer");
 
-      iterations_changer.value=value;
+      iterations_changer.value = value;
       if (iterations_changer.value > 0 && Number.isInteger(Number(iterations_changer.value))) {
-        iterationsCount=iterations_changer.value;
+        iterationsCount = iterations_changer.value;
         iterations_changer.classList.remove("wrong");
       } else {
         iterations_changer.classList.add("wrong");
@@ -298,9 +298,9 @@
     function zoomChange(value) {
       let zoom_changer = document.getElementById("zoom_changer");
 
-      zoom_changer.value=Number(value).toFixed(1);
-      if (zoom_changer.value > 0.1){
-        fractalZoom=zoom_changer.value;
+      zoom_changer.value = Number(value).toFixed(1);
+      if (zoom_changer.value > 0.1) {
+        fractalZoom = zoom_changer.value;
         zoom_changer.classList.remove("wrong");
       } else {
         zoom_changer.classList.add("wrong");
@@ -311,24 +311,27 @@
 
 
 <body onload="webGLStart();">
-  <canvas id="wegl-canvas" style="position: fixed; top: 0px; right: 0px; border: 0px; width: 88%; height: 100%; cursor: move"
+  <canvas id="wegl-canvas"
+    style="position: fixed; top: 0px; right: 0px; border: 0px; width: 100%; height: 100%; cursor: move"
     onwheel="zoomChange(Math.max(fractalZoom * (event.deltaY > 0 ? 1.25 : 0.8), 0.1));"
     onmousedown="isMouseDragging=true;oldMouseX=event.clientX; oldMouseY=event.clientY"
     onmouseup="isMouseDragging=false" onmousemove="mouseDragging(event);" onresize="canvasResize(event);"></canvas>
 
   <div class="control_pane">
     <a class="title" style="font-size: 25px;">Fractal Settings</a>
-  
+
     <div>
       <lable class="text">Iterations Count<br></lable>
-      <input id="iterations_changer" class="input" value="144" type="number" onchange="iterationsChange(this.value);"style="width: 75px;">
+      <input id="iterations_changer" class="input" value="144" type="number" onchange="iterationsChange(this.value);"
+        style="width: 75px;">
     </div>
 
     <div>
       <label class="text">Fractal Zoom<br></label>
-      <input id="zoom_changer" class="input" value="1" type="number" onchange="zoomChange(this.value);"style="width: 75px;">
+      <input id="zoom_changer" class="input" value="1" type="number" onchange="zoomChange(this.value);"
+        style="width: 75px;">
     </div>
-  
+
     <div>
       <label class="text">Fractal Insight Color<br></label>
       <input type="color" value="#361111" onchange="fractalInsColor=hexToRgb(this.value.split('#').join(''));">

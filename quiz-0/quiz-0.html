@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Quiz 0</title>
+
+  <script>
+    async function getFileText(path) {
+      let result = await fetch(path);
+      return await result.text();
+    }
+
+    function printXY(input) {
+      let strings = input.split("\r\n");
+      let n = parseInt(Number(strings[0].split(' ')[0]));
+      let k = parseInt(Number(strings[0].split(' ')[1]));
+
+      let dict = {};
+
+      for (let i = 1; i <= n; i++)
+        dict[strings[i]] = 0;
+      for (let i = 1; i <= n; i++)
+        dict[strings[i]]++;
+
+      for (let i = 1; i <= n; i++)
+        if (dict[strings[i]] != 3)
+          document.getElementById("flex").innerHTML += strings[i] + ' ';
+    }
+
+    async function onLoad() {
+      text = await getFileText("input.txt");
+      printXY(text);
+    }
+  </script>
+</head>
+
+<body onload='onLoad();''>
+  <p id="flex"></p>
+</body>
