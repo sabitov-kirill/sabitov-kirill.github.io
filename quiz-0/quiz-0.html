@@ -10,29 +10,36 @@
     }
 
     function printXY(input) {
-      let strings = input.split("\n");
-      let n = parseInt(Number(strings[0].split(' ')[0]));
-      let k = parseInt(Number(strings[0].split(' ')[1]));
-
+      let strings;
       let dict = {};
 
-      for (let i = 1; i <= n; i++)
-        dict[strings[i]] = 0;
-      for (let i = 1; i <= n; i++)
-        dict[strings[i]]++;
+      strings = input.split("\n");
+      strings = strings.map(string => string.replace('\r', ''));
 
-      for (let i = 1; i <= n; i++)
-        if (dict[strings[i]] != 3)
-          document.getElementById("flex").innerHTML += strings[i] + ' ';
+      let n = parseInt(Number(strings[0].split(' ')[0]));
+      let k = parseInt(Number(strings[0].split(' ')[1]));
+      strings = strings.slice(1);
+
+      strings.forEach(string => dict[string] = 0);
+      strings.forEach(string => dict[string]++);
+
+      let new_text = "X and Y values: ";
+      strings.forEach(string => {
+        if (dict[string] != 3) new_text += string + ' ';
+      });
+      document.getElementById("flex").innerHTML = new_text;         
     }
 
     async function onLoad() {
       text = await getFileText("./input.txt");
+      document.getElementById("numbers_textarea").value = text;
       printXY(text);
+      document.getElementById("flex").innerHTML += "<br>(Text was automaticly loaded from \"inuput.txt\")";
     }
   </script>
 </head>
 
 <body onload='onLoad();''>
-  <p id="flex"></p>
+  <textarea id="numbers_textarea" style="width: 150px; height: 300px;" onchange="printXY(this.value)"></textarea><br>
+  <p id="flex">X and Y: </p>
 </body>
