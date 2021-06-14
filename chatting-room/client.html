@@ -3,29 +3,41 @@
 
 <head>
   <title>Messenger</title>
+  <link rel="stylesheet" href="./client.css">
+
   <script>
     function sendMessage() {
       let name_changer = document.getElementById("name");
       let message_changer = document.getElementById("message");
-
       let msg = { name: name_changer.value, message: message_changer.value };
 
-      fetch("/msg", {
-        method: "POST",
-        headers: { "Contet-Type": "application/json;charset=utf-8" },
-        body: JSON.stringify(msg)
-      });
+      if (name_changer.value != "" && message_changer.value != "") {
+        fetch("/msg", {
+          method: "POST",
+          headers: { "Contet-Type": "application/json;charset=utf-8" },
+          body: JSON.stringify(msg)
+        });
+        message_changer.value = "";
+      }
     }
 
     function getMessages() {
-      fetch("/msg", { method: "GET" })
+      let messages_pane = document.getElementById("messages_pane");
+
+      fetch("/msg", { 
+        method: "GET",
+      })
         .then((result) => {
           return result.text();
         })
-        .then((text) => {
-          let messages_pane = document.getElementById("messages_pane");
-          messages_pane.innerHTML = text;
+        .then((json) => {
+          let messages = JSON.parse(json);
+          let text = "";
 
+          for (message of messages) {
+            text += `${message.name}: ${message.message}<br>`;
+          }
+          messages_pane.innerHTML  = text;
           tick();
         });
     }
@@ -37,11 +49,15 @@
 </head>
 
 <body onload="tick();">
-  <input type="text" id="name" /><br>
-  <input type="text" id="message" /><br>
-  <button onclick="sendMessage();">Send Message</button>
-  <button onclick="getMessages();">Get Messages</button><br><br>
-  <p id="messages_pane"></p>
+  <div class="message_post">
+    <input class="title" placeholder="NAME" type="text" id="name" style="text-align: center; font-size: 30px;">
+    <textarea class="text" placeholder="MESSAGE" id="message" style="text-align: center; text-transform: none;"></textarea>
+    <input class="title button" type="button" onclick="sendMessage();" value="Send Message" style="font-size: 22px; background-color: #1abc9c;">
+  </div>
+
+  <div class="message_display">
+    <p id="messages_pane" class="text"></p>
+  </div>
 </body>
 
 </html>

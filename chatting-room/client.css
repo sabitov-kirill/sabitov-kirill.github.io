@@ -1,0 +1,62 @@
+* {box-sizing: border-box;}
+body { font-family: Verdana, sans-serif; margin: 0; }
+
+.message_post {
+  display: block;
+  position: fixed;
+  width: 300px;
+  height: fit-content;
+  background-color: #1abc9c00;
+  margin: 15% 15%;
+  box-shadow: 0 10px 2.5rem rgb(27, 64, 94);
+}
+
+input, textarea {
+  resize: vertical;
+  display: block;
+  width: 80%;
+  height: 80px;
+  background-color: #c9c9c986;
+  margin: 20px auto;
+  border-radius: 15px;
+  font-size: 25px;
+  transition: background-color 0.4s;
+  border-color: #1abc9c;
+}
+
+.button:hover {
+  cursor: pointer;
+  background-color: #00000000 !important;
+}
+
+.message_display {
+  top: 0;
+  width: 40%;
+  height: 150rem;
+  margin-left: calc(30% + 300px);
+  background-color: #ddd;
+  box-shadow: 0 10px 2.5rem rgb(27, 64, 94);
+}
+
+.message_display p {
+  font-size: 20px;
+  display: block;
+  width: 80%;
+  height: 15%;
+  margin: 3px auto;
+}
+
+.title {
+  color: #555;
+  font-size: 25px;
+  padding: 0 0 0 0;
+
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 3px;
+}
+
+.text {
+  color: #666;
+  font-size: 20px;
+}

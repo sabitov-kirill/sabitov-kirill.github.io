@@ -9,6 +9,7 @@ const requestListener = function (req, res) {
     `Request: ${req.method}, ${req.url}.`
   );
 
+  // html page and css file loading
   if (req.url === "/") {
     fs.readFile(`${__dirname}/client.html`)
       .then((html_content) => {
@@ -16,28 +17,33 @@ const requestListener = function (req, res) {
         res.writeHead(200);
         res.end(html_content);
       });
-  } else if (req.url === "/msg" && req.method === "POST") {
+  } else if (req.url.endsWith(".css")) {
+    fs.readFile(`${__dirname}/client.css`)
+      .then((css_content) => {
+        res.setHeader("Content-Type", "text/css");
+        res.writeHead(200);
+        res.end(css_content);
+      });
+  } 
+  
+  // messages getting and posting
+  else if (req.url === "/msg" && req.method === "POST") {
     let data = "";
     req.once('data', chunk => {
       data += chunk;
     })
     req.once('end', () => {
-      let new_msg = JSON.parse(data);
-      messages.push(new_msg);
-      console.log(`New msg added - { name: "${new_msg.name}", message: "${new_msg.message}" }.`);
+      messages.push(JSON.parse(data));
       res.end();
     })
   } else if (req.url === "/msg" && req.method === "GET") {
-    let messages_pane_text = "";
-
-    for (message of messages) {
-      messages_pane_text += `${message.name}: ${message.message}<br>`;
-    }
-
-    res.setHeader("Content-Type", "text");
+    res.setHeader("Content-Type", "application/json");
     res.writeHead(200);
-    res.end(messages_pane_text);
-  } else {
+    res.end(JSON.stringify(messages));
+  } 
+  
+  // error
+  else {
     res.writeHead(500);
     res.end("Error, unsupported");
     return;
