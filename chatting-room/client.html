@@ -7,8 +7,8 @@
 
   <script>
     function sendMessage() {
-      let name_changer = document.getElementById("name");
-      let message_changer = document.getElementById("message");
+      let name_changer = document.getElementById("inputElementName");
+      let message_changer = document.getElementById("inputElementMessage");
       let msg = { name: name_changer.value, message: message_changer.value };
 
       if (name_changer.value != "" && message_changer.value != "") {
@@ -22,9 +22,7 @@
     }
 
     function getMessages() {
-      let messages_pane = document.getElementById("messages_pane");
-
-      fetch("/msg", { 
+      fetch("/msg", {
         method: "GET",
       })
         .then((result) => {
@@ -32,12 +30,27 @@
         })
         .then((json) => {
           let messages = JSON.parse(json);
-          let text = "";
+          let message_display = document.getElementById("panelMessagesDiaplay");
+
+          while (message_display.children[1])
+            message_display.removeChild(message_display.lastChild);
 
           for (message of messages) {
-            text += `${message.name}: ${message.message}<br>`;
+            let message_element = document.createElement("div");
+            let message_author_element = document.createElement("p");
+            let message_data = document.createElement("p");
+
+            message_author_element.innerText = message.name;
+            message_author_element.classList.add("author");
+            message_data.innerText = message.message;
+            message_data.classList.add("data");
+
+            message_element.classList.add("messageBox");
+            message_element.appendChild(message_author_element);
+            message_element.appendChild(message_data);
+            message_display.appendChild(message_element);
           }
-          messages_pane.innerHTML  = text;
+
           tick();
         });
     }
@@ -49,14 +62,17 @@
 </head>
 
 <body onload="tick();">
-  <div class="message_post">
-    <input class="title" placeholder="NAME" type="text" id="name" style="text-align: center; font-size: 30px;">
-    <textarea class="text" placeholder="MESSAGE" id="message" style="text-align: center; text-transform: none;"></textarea>
-    <input class="title button" type="button" onclick="sendMessage();" value="Send Message" style="font-size: 22px; background-color: #1abc9c;">
+  <div id="panelMessageSending">
+    <p id="titleMessgeSending" class="title">Message<br>sending</p>
+    <input id="inputElementName" class="text textInput" type="title" placeholder="name">
+    <textarea id="inputElementMessage" class="text textInput" placeholder="message"
+      onkeyup="if (event.keyCode === 13) sendMessage();"></textarea>
+    <input id="inputElementSendMessage" class="title button" type="button" onclick="sendMessage();"
+      value="send message">
   </div>
 
-  <div class="message_display">
-    <p id="messages_pane" class="text"></p>
+  <div id="panelMessagesDiaplay">
+    <p class="title">Messages</p>
   </div>
 </body>
 

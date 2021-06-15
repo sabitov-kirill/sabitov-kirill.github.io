@@ -1,56 +1,21 @@
-* {box-sizing: border-box;}
-body { font-family: Verdana, sans-serif; margin: 0; }
-
-.message_post {
-  display: block;
-  position: fixed;
-  width: 300px;
-  height: fit-content;
-  background-color: #1abc9c00;
-  margin: 15% 15%;
-  box-shadow: 0 10px 2.5rem rgb(27, 64, 94);
+* {
+  font-family: Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: 0.5s;
 }
 
-input, textarea {
-  resize: vertical;
-  display: block;
-  width: 80%;
-  height: 80px;
-  background-color: #c9c9c986;
-  margin: 20px auto;
-  border-radius: 15px;
-  font-size: 25px;
-  transition: background-color 0.4s;
-  border-color: #1abc9c;
+body {
+  width: 100vw;
+  height: 100vh;
 }
 
-.button:hover {
-  cursor: pointer;
-  background-color: #00000000 !important;
-}
-
-.message_display {
-  top: 0;
-  width: 40%;
-  height: 150rem;
-  margin-left: calc(30% + 300px);
-  background-color: #ddd;
-  box-shadow: 0 10px 2.5rem rgb(27, 64, 94);
-}
-
-.message_display p {
-  font-size: 20px;
-  display: block;
-  width: 80%;
-  height: 15%;
-  margin: 3px auto;
-}
+/* TEXT */
 
 .title {
   color: #555;
   font-size: 25px;
-  padding: 0 0 0 0;
-
+  padding: 0;
   text-transform: uppercase;
   text-align: center;
   letter-spacing: 3px;
@@ -59,4 +24,144 @@ input, textarea {
 .text {
   color: #666;
   font-size: 20px;
+}
+
+/***
+ * SENDING MESSAGE FORM
+ ***/
+
+#panelMessageSending {
+  position: fixed;
+  width: fit-content;
+  height: fit-content;
+  margin: calc(50vh - 11.5vh) 10vw;
+  background-color: rgba(0, 0, 0, 0);
+  box-shadow: 0 10px 2.5rem rgb(27, 64, 94);
+}
+
+#titleMessgeSending {
+  top: 0;
+  background: #1abc9c;
+  height: fit-content;
+  width: 25vw;
+  padding: 0.5vh 0;
+  margin: 0.5vh 0;
+  margin-top: 0;
+}
+
+.textInput {
+  vertical-align: bottom;
+  color: #555;
+  outline: 0;
+  border-width: 0 0 2px;
+  border-color: rgb(94, 94, 94)
+}
+
+.textInput:focus {
+  border-color: rgb(0, 0, 0)
+}
+
+.textInput, .button {
+  text-align: center;
+  display: block;
+  height: fit-content;
+  color:rgb(0, 0, 0);
+  width: 23vw;
+  margin: 0 auto;
+  margin-bottom: 1vh;
+}
+
+.button {
+  border-style: solid;
+  border-color: rgb(94, 94, 94);
+  font-size: 20px;
+  background-color: white;
+  cursor: pointer;
+}
+
+#inputElementName::placeholder, #inputElementMessage::placeholder {
+  color: #555;
+  font-size: 2vh;
+  padding: 0 0 0 0;
+  text-transform: uppercase;
+  text-align: center, justify;
+  letter-spacing: 3px;
+}
+
+#inputElementName {
+  margin-top: 1vh !important;
+}
+
+#inputElementMessage {
+  resize: none;
+  font-size: 2vh;
+}
+
+#inputElementSendMessage {
+  width: calc(20vw + 4px) !important;
+  height: 5vh !important;
+  height: fit-content;
+}
+
+/***
+ * MESSAGES DISPLAY
+ ***/
+ 
+input {
+  border-color: #d5d5d5;
+  border-radius: 0px;
+  font-size: 16px;
+  font-family: Arial, Helvetica, monospace;
+  padding: 5px;
+}
+
+.author {
+  display: inline-block;
+  border: 0px;
+  border-radius: 10px;
+  border-color: #d5d5d5;
+  background-color: #ededed;
+  padding: 10px;
+  margin: 0px 10px;
+  width: fit-content;
+}
+
+.data {
+  display: inline-block;
+  padding: 10px;
+  margin: 0px 1px;
+  width: fit-content;
+}
+
+.messageBox {
+  margin: 5px;
+}
+
+#panelMessagesDiaplay {
+  overflow-y: scroll; 
+  display: flex;
+  flex-direction: column;
+  width: 45vw;
+  height: 100%;
+  margin-left: 45vw;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+ 
+#panelMessagesDiaplay::-webkit-scrollbar {
+  width: 10px;
+}
+ 
+/* Track */
+#panelMessagesDiaplay::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+#panelMessagesDiaplay::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+ 
+/* Handle on hover */
+#panelMessagesDiaplay::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }

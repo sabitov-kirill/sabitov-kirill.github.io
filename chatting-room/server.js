@@ -24,24 +24,27 @@ const requestListener = function (req, res) {
         res.writeHead(200);
         res.end(css_content);
       });
-  } 
-  
+  }
+
   // messages getting and posting
   else if (req.url === "/msg" && req.method === "POST") {
     let data = "";
-    req.once('data', chunk => {
+    req.on('data', (chunk) => {
       data += chunk;
     })
-    req.once('end', () => {
+    req.on('end', () => {
       messages.push(JSON.parse(data));
+      res.writeHead(200);
       res.end();
     })
+
+    return;
   } else if (req.url === "/msg" && req.method === "GET") {
     res.setHeader("Content-Type", "application/json");
     res.writeHead(200);
     res.end(JSON.stringify(messages));
-  } 
-  
+  }
+
   // error
   else {
     res.writeHead(500);
