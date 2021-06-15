@@ -10,7 +10,35 @@ body {
   height: 100vh;
 }
 
-/* TEXT */
+/***
+ * ANIMATIONS
+ ***/
+
+ @keyframes scaling {
+   0% {
+     transform: scale(0);
+     opacity: 0;
+   }
+
+   100% {
+    opacity: 1;
+    transform: scale(1);
+   }
+ }
+
+ @keyframes sliding {
+  0% {
+    left: 100%;
+  }
+
+  100% {
+    left: 0%;
+  }
+}
+
+/***
+ * TEXT
+ ***/
 
 .title {
   color: #555;
@@ -23,7 +51,7 @@ body {
 
 .text {
   color: #666;
-  font-size: 20px;
+  font-size: 2vh;
 }
 
 /***
@@ -49,43 +77,33 @@ body {
   margin-top: 0;
 }
 
-.textInput {
-  vertical-align: bottom;
+#inputElementName::placeholder, #inputElementMessage::placeholder {
   color: #555;
-  outline: 0;
-  border-width: 0 0 2px;
-  border-color: rgb(94, 94, 94)
-}
-
-.textInput:focus {
-  border-color: rgb(0, 0, 0)
+  padding: 0;
+  text-transform: uppercase;
+  text-align: center, justify;
+  letter-spacing: 3.5px;
 }
 
 .textInput, .button {
-  text-align: center;
+  text-align: justify;
   display: block;
-  height: fit-content;
-  color:rgb(0, 0, 0);
+  height: 2.5vh;
   width: 23vw;
   margin: 0 auto;
   margin-bottom: 1vh;
-}
-
-.button {
+  outline: 0;
+  border-width: 2px;
+  background-color: #FFF;
   border-style: solid;
   border-color: rgb(94, 94, 94);
-  font-size: 20px;
-  background-color: white;
-  cursor: pointer;
+  font-size: 2vh;
+  background-color: rgba(255, 255, 255, 0);
 }
 
-#inputElementName::placeholder, #inputElementMessage::placeholder {
-  color: #555;
-  font-size: 2vh;
-  padding: 0 0 0 0;
-  text-transform: uppercase;
-  text-align: center, justify;
-  letter-spacing: 3px;
+.textInput:focus {
+  color: #000;
+  border-color: #FFF #FFF rgb(0, 0, 0) #FFF !important
 }
 
 #inputElementName {
@@ -94,26 +112,42 @@ body {
 
 #inputElementMessage {
   resize: none;
-  font-size: 2vh;
+}
+
+#inputElementMessage:focus {
+  height: 15vh;
+}
+
+.button {
+  text-align: unset !important;
+  cursor: pointer;
 }
 
 #inputElementSendMessage {
-  width: calc(20vw + 4px) !important;
-  height: 5vh !important;
-  height: fit-content;
+  animation-name: scaling;
+  animation-duration: 0.4s;
+  display: inline-block;
+  width: calc(2.5vh + 4px);
+  height: calc(2.5vh + 4px);
+  margin-left: calc(1vw - 2px);
+}
+
+#inputElementSendMessage:hover {
+  background-color: #c9c9c986;
+  border-radius: 5px;
+}
+
+#labelSendMessage {
+  animation-name: scaling;
+  animation-duration: 0.4s;
+  letter-spacing: 3px;
+  display: inline-block;
+  margin-left: 7px;
 }
 
 /***
  * MESSAGES DISPLAY
  ***/
- 
-input {
-  border-color: #d5d5d5;
-  border-radius: 0px;
-  font-size: 16px;
-  font-family: Arial, Helvetica, monospace;
-  padding: 5px;
-}
 
 .author {
   display: inline-block;
@@ -123,14 +157,12 @@ input {
   background-color: #ededed;
   padding: 10px;
   margin: 0px 10px;
-  width: fit-content;
 }
 
 .data {
   display: inline-block;
   padding: 10px;
   margin: 0px 1px;
-  width: fit-content;
 }
 
 .messageBox {
