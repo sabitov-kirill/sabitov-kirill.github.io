@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Quiz 2</title>
+
+  <script>
+    let arr = []
+
+    function solve(text) {
+      arr = text.split(' ');
+      arr.forEach((element, i) => arr[i] = Number(arr[i]) + 1);
+
+      arr.forEach((el) => {
+        let n = Math.abs(el);
+        if (n - 1 < arr.length) arr[n - 1] = -arr[n - 1];
+      })
+
+      let i = 0;
+      while (arr[i] < 0) i++;
+
+      document.getElementById("flex").innerText += ` ${i}`;
+    }
+  </script>
+</head>
+
+<body>
+  <textarea id="numbers_textarea" style="width: 30vw; height: 7vh" onchange="solve(this.value)"></textarea><br>
+  <p id="flex">Ans: </p>
+</body>

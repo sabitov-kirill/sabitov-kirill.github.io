@@ -150,9 +150,12 @@ body {
 }
 
 .data {
+  text-align: start;
   display: inline-block;
   padding: 10px;
   margin: 0px 1px;
+  width: 30vw !important;
+  word-break: break-all;
 }
 
 .messageBox {

@@ -3,65 +3,58 @@
 
 <head>
   <title>Messenger</title>
-  <link rel="stylesheet" href="./client.css">
+  <link rel="stylesheet" href="client.css">
 
+  <script src="/socket.io/socket.io.js"></script>
   <script>
-    function messagesPlace(messages) {
-      const message_display = document.getElementById("panelMessagesDiaplay");
+    var socket = io();
 
-      while (message_display.children[1])
-        message_display.removeChild(message_display.lastChild);
-
-      for (message of messages) {
-        let message_element = document.createElement("div");
-        let message_author_element = document.createElement("p");
-        let message_data = document.createElement("a");
-
-        message_author_element.innerText = message.name;
-        message_author_element.classList.add("author");
-        message_data.innerText = message.message;
-        message_data.classList.add("data");
-
-        message_element.classList.add("messageBox");
-        message_element.appendChild(message_author_element);
-        message_element.appendChild(message_data);
-        message_display.appendChild(message_element);
-      }
-    }
-
+    //
+    //  Sending messages
+    //
     function sendMessage() {
       const name_changer = document.getElementById("inputElementName");
       const message_changer = document.getElementById("inputElementMessage");
-      let msg = { name: name_changer.value, message: message_changer.value };
 
-      if (name_changer.value && name_changer.value != '\n' && message_changer.value && message_changer.value != '\n') {
-        fetch("/msg", {
-          method: "POST",
-          headers: { "Contet-Type": "application/json;charset=utf-8" },
-          body: JSON.stringify(msg)
-        });
+      let msg = { name: name_changer.value, message: message_changer.value };
+      msg.message = msg.message.trim();
+
+      if (name_changer.value && name_changer.value != '\n' && msg.message) {
+        socket.emit('message', JSON.stringify(msg));
         message_changer.value = "";
       }
     }
 
-    function getMessages() {
-      fetch("/msg", {
-        method: "GET",
-      })
-        .then((result) => {
-          return result.text();
-        })
-        .then((json) => {
-          let messages = JSON.parse(json);
-          messagesPlace(messages);
-          tick();
-        });
+    //
+    //  Getting messages
+    //
+    function messagePlace(message) {
+      const message_display = document.getElementById("panelMessagesDiaplay");
+
+      let message_element = document.createElement("div");
+      let message_author_element = document.createElement("p");
+      let message_data = document.createElement("a");
+
+      message_author_element.innerText = message.name;
+      message_author_element.classList.add("author");
+      message_data.innerText = message.message;
+      message_data.classList.add("data");
+
+      message_element.classList.add("messageBox");
+      message_element.appendChild(message_author_element);
+      message_element.appendChild(message_data);
+      message_display.appendChild(message_element);
+      message_display.scrollTop = message_display.scrollHeight;
     }
 
-    function tick() {
-      setTimeout(getMessages, 500);
-    }
+    socket.on('message', (msg) => {
+      console.log(msg);
+      messagePlace(JSON.parse(msg));
+    });
 
+    //
+    //  Button showing
+    //
     function buttonShowing() {
       const send_but = document.getElementById("inputElementSendMessage");
       const label = document.getElementById("labelSendMessage");
@@ -85,19 +78,20 @@
   </script>
 </head>
 
-<body onload="tick();">
+<body>
   <div id="panelMessageSending">
     <p id="titleMessgeSending" class="title">Message<br>sending</p>
     <input id="inputElementName" class="text textInput" type="title" placeholder="name" oninput="buttonShowing()">
     <textarea id="inputElementMessage" class="text textInput" placeholder="message"
-      onkeyup="if (event.keyCode === 13) { sendMessage(); buttonShowing(); };" oninput="buttonShowing()"></textarea>
+      onkeyup="if (event.keyCode == 13 && !event.shiftKey) { sendMessage(); buttonShowing(); };"
+      oninput="buttonShowing()"></textarea>
     <input id="inputElementSendMessage" class="title button" type="button" onclick="sendMessage(); buttonShowing();"
       style="display: none;" value="&#10149;"><label style="display: none;" id="labelSendMessage"
       class="text">SEND</label>
   </div>
 
   <div id="panelMessagesDiaplay">
-    <p class="title">Messages</p>
+    <p id="titleMessagesDiaplay" class="title">Messages</p>
   </div>
 </body>
 

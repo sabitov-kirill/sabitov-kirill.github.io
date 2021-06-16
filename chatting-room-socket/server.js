@@ -1,26 +1,40 @@
 const express = require('express');
 const app = express();
-
-app.use(express.static('public'))
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
 // messages storage
 let messages = [];
 
-// requests handle
-app.get("/msg", (req, res) => {
-  res.status(200).send(JSON.stringify(messages));
-});
-app.post("/msg", (req, res) => {
-  let data = "";
-  req.on('data', (chunk) => {
-    data += chunk;
-  })
-  req.on('end', () => {
-    messages.push(JSON.parse(data));
-    res.status(200);
-  })
-})
+app.use(express.static('./public'))
 
-// creating server
-const port = 8000;
-app.listen(port, () => console.log(`Server is listering on port ${port}`));
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+
+  for (message of messages) {
+    socket.emit('message', JSON.stringify(message));
+    console.log("Onload message send:" + JSON.stringify(message));
+  }
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+
+  socket.on('message', (msg) => {
+    let new_msg = JSON.parse(msg);
+    messages.push(new_msg);
+
+    io.emit('message', msg);
+    console.log("Message pushed:" + msg);
+  });
+});
+
+server.listen(8000, () => {
+  console.log('listening on *:3000');
+});
