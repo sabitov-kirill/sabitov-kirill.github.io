@@ -152,6 +152,8 @@ body {
   padding: 10px;
   margin: 0px 10px;
   height: fit-content;
+  word-break: break-all;
+  max-width: 10vw;
 }
 
 .data {

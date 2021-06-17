@@ -5,25 +5,19 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-// messages storage
-let messages = [];
-
 app.use(express.static('./public'))
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
-});
+let messages = [];
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log(`A user "${socket.id}" connected.`);
 
   for (message of messages) {
     socket.emit('message', JSON.stringify(message));
-    console.log("Onload message send:" + JSON.stringify(message));
   }
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log(`A user "${socket.id}" disconnected.`);
   });
 
   socket.on('message', (msg) => {
@@ -31,10 +25,10 @@ io.on('connection', (socket) => {
     messages.push(new_msg);
 
     io.emit('message', msg);
-    console.log("Message pushed:" + msg);
   });
 });
 
-server.listen(8000, () => {
-  console.log('listening on *:3000');
+const port = process.env.PORT || 5000
+server.listen(port, () => {
+  console.log(`Server is listening on "${port}".`);
 });

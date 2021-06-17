@@ -18,8 +18,11 @@
 
       let msg = { name: name_changer.value, message: message_changer.value };
       msg.message = msg.message.trim();
+      msg.message = msg.message.slice(0, 1000);
+      msg.name = msg.name.trim();
+      msg.name = msg.name.slice(0, 20);
 
-      if (name_changer.value && name_changer.value != '\n' && msg.message) {
+      if (msg.name && msg.message) {
         socket.emit('message', JSON.stringify(msg));
         message_changer.value = "";
       }
@@ -75,13 +78,38 @@
         message_changer.style.height = "2.5vh";
       }
     }
+
+    function getCookie(name) {
+      let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    //
+    //  Setting name to cookie
+    //
+    function setNameCookie() {
+      const name_changer = document.getElementById("inputElementName");
+      document.cookie = `name=${name_changer.value}`;
+    }
+
+    //
+    //  onLoad
+    //
+    function onLoad() {
+      const name_changer = document.getElementById("inputElementName");
+      let name_fromm_cookie = getCookie('name');;
+      if (name_fromm_cookie) name_changer.value = name_fromm_cookie;
+    }
   </script>
 </head>
 
-<body>
+<body onload="onLoad();">
   <div id="panelMessageSending">
     <p id="titleMessgeSending" class="title">Message<br>sending</p>
-    <input id="inputElementName" class="text textInput" type="title" placeholder="name" oninput="buttonShowing()">
+    <input id="inputElementName" class="text textInput" type="title" placeholder="name" oninput="buttonShowing();"
+      onchange="setNameCookie();">
     <textarea id="inputElementMessage" class="text textInput" placeholder="message"
       onkeyup="if (event.keyCode == 13 && !event.shiftKey) { sendMessage(); buttonShowing(); };"
       oninput="buttonShowing()"></textarea>
