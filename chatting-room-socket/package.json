@@ -1,10 +1,30 @@
 {
-  "name": "socket-chat-example",
-  "version": "0.0.1",
+  "name": "ks6-socket-chat",
+  "version": "1.0.0",
   "description": "my first socket.io app",
   "dependencies": {
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
-    "socket.io": "^4.1.2"
-  }
+    "jquery": "^3.6.0",
+    "lodash": "^4.17.21",
+    "socket.io": "^4.1.2",
+    "socket.io-client": "^4.1.2",
+    "webpack": "^5.39.0",
+    "webpack-cli": "^4.7.2"
+  },
+  "main": "server.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CGSG-KS6/cgsg-ks6.github.io.git"
+  },
+  "author": "KS6",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CGSG-KS6/cgsg-ks6.github.io/issues"
+  },
+  "homepage": "https://github.com/CGSG-KS6/cgsg-ks6.github.io#readme"
 }
