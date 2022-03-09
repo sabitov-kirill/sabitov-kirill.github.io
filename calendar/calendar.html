@@ -46,6 +46,10 @@
 
     // Set active (highlight) day function
     function calendarSetActiveDay(date) {
+      if (calendarDisplayngDate.getMonth() != (new Date).getMonth() ||
+          calendarDisplayngDate.getFullYear() != (new Date).getFullYear())
+        return;
+
       let days_table = document.getElementById("days_table");
 
       /* Deleting current active day */

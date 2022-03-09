@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Hubballi&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300&family=Hubballi&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: 'Assistant', sans-serif;
+
+  font-size: 1.8vh;
+}
+@media screen and (max-width: 1000px) {
+  body {
+    font-size: 2vh;
+    width: 100%;
+  }
+}
+
+h1 {
+  text-transform: uppercase;
+  font-family: 'Hubballi', cursive;
+  font-size: 2em;
+  color: #222;
+}
+h2 {
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-family: 'Hubballi', cursive;
+  font-size: 2.5em;
+  color: #222;
+}
+p {
+  font-family: 'Assistant', sans-serif;
+  font-size: 1em;
+  color: #222;
+}
+
+a {
+  padding: 0.3em;
+  color: #eee;
+  background-color: #222;
+  border-radius: 0.2em;
+  text-decoration: none;
+}
+a:visited {
+  color: #eee;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+  color: #222;
+  background-color: #888;
+  transition: 0.5s;
+}
+
+a[disabled] {
+  color: #eee;
+  background-color: rgb(56, 0, 0);
+  cursor: default;
+  text-decoration: none;
+}
+a[disabled]:hover {
+  background-color: rgb(80, 0, 0);
+  cursor: default;
+  text-decoration: none;
+}

@@ -1,49 +1,102 @@
-body {
-  background-color: rgb(255, 255, 255);
-  background-image: url(images/fogyforest.jpg);
-  font-family: Verdana, sans-serif; 
-}
+@import url('./elements.css');
 
-.info_pane {
-  box-shadow: 0 10px 2.5rem rgb(27, 64, 94);
-  color: #777;
+#background {
   position: fixed;
-  top: 0px; 
-  width: 430px; 
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
-  margin: 0;
-  left: 2.5%; 
-  background-color: #1abc9c
+  background: url(images/foggy_forest.jpg) no-repeat center center fixed; 
+  background-size: cover;
 }
 
-.title {
-  color: #555;
-  font-size: 25px;
-  padding: 0 0 0 0;
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  background: hsl(0 0% 100% / 0.1);
+  backdrop-filter: blur(15px);
 
-  text-transform: uppercase;
+  padding: 2em;
+  margin-left: 5vw;
+  width: 600px;
+  height: calc(100vh - 4em);
+}
+
+.about {
+  display: grid;
+  width: 100%;
+  
+  grid-template-columns: 10em calc(100% - 10em);
+  grid-template-rows: 6em 6em;
+}
+.about > #avatar {
+  grid-column: 1;
+  grid-row: span 2;
+  height: 10em;
+  width: auto;
+  border-radius: 50%;
+}
+.about > .text {
+  grid-column: 2;
+  grid-row: span 2;
+  padding-left: 1em;
+  width: auto;
+  border-radius: 50%;
+}
+.about > .text > h1, h2 {
   text-align: center;
-  letter-spacing: 3px;
 }
 
-.text {
-  color: #666;
-  font-size: 20px;
+.projest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex-grow: 2;
 }
 
-.button {
-  border-color: rgba(85, 85, 85, 0.445);
-  background-color: rgba(80, 79, 79, 0.116);
-  padding: 10px 16px;
-  text-align: center;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 20px;
-  transition: 0.5s;
+.contacts {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  gap: 5px;  
+}
+.contacts > * {
+  display: flex;
+  align-items: center;
+  width: 2em;
+  height: 2em;
+}
+.contacts > a > img {
+  width: 2em;
 }
 
-.button:hover {
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
-  background-color: rgba(80, 79, 79, 0.274);
+@media screen and (max-width: 1000px) {
+  .container {
+    background: rgba(165, 165, 165, 0.4);
+    backdrop-filter: blur(25px);
+
+    padding: 0.5em;
+    margin: 0;
+    width: calc(100% - 1em);
+    height: calc(100vh - 1em);
+  }
+
+  .about {
+    grid-template-columns: 100%;
+    grid-template-rows: 11em 10em;
+
+    flex-grow: 2;
+  }
+  .about > #avatar {
+    margin: auto;
+    grid-column: 1;
+    grid-row: 1;
+    height: 10em;
+  }
+  .about > .text {
+    grid-column: span 2;
+    grid-row: 2;
+  }
 }

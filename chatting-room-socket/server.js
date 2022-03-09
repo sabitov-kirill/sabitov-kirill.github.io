@@ -13,7 +13,7 @@ io.on('connection', (socket) => {
   console.log(`A user "${socket.id}" connected.`);
 
   for (message of messages) {
-    socket.emit('message', JSON.stringify(message));
+    socket.emit('message', message);
   }
 
   socket.on('disconnect', () => {
@@ -21,10 +21,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', (msg) => {
-    let new_msg = JSON.parse(msg);
-    messages.push(new_msg);
-
-    io.emit('message', msg);
+    try {
+      messages.push(msg);
+      io.emit('message', msg);
+    } catch {
+      console.log("Error. Cannton parse message from user.");
+    }
   });
 });
 

@@ -1,23 +1,49 @@
 * {box-sizing: border-box;}
-body { font-family: Verdana, sans-serif; }
+body { 
+  font-family: Verdana, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+}
 
 .calendar {
   background: #eee;
   border-spacing: 0px;
-  width: 40%;
-  height: 35rem;
+  width: 90vw;
+  height: 80vh;
   margin: 5% auto;
   box-shadow: 0 10px 2.5rem rgb(27, 64, 94);
 }
 
+@media screen and (min-width: 1000px) {
+  body {
+    font-size: 15px;
+  }
+
+  .calendar {
+    width: 40%;
+    height: 35rem;
+    margin: 5% auto;
+  }
+
+  .info_row .text {
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 3px;
+    font-size: 15px;
+  }
+}
+
 .calendar td {
+  display: table-cell;
   text-align: center;
-  font-size:12px;
   width: 14%;
   color: #777;
 }
 
 .info_row {
+  height: 7vh;
   background: #1abc9c;
   color: white;
 }
@@ -27,7 +53,7 @@ body { font-family: Verdana, sans-serif; }
   background-color: #00000000;
   border: none;
   color: white;
-  font-size: 25px;
+  font-size: large;
   height: 98%;
   width: 95%;
 }
@@ -41,9 +67,9 @@ body { font-family: Verdana, sans-serif; }
 
 .info_row .text {
   text-transform: uppercase;
-  font-size: 15px;
   text-align: center;
   letter-spacing: 3px;
+  font-size: 40px;
 }
 
 input::-webkit-inner-spin-button {
@@ -54,14 +80,13 @@ input::-webkit-inner-spin-button {
 #year {
   color: #777;
   border: 0px;
-  font-size: 25px;
   background-color: rgba(255, 255, 255, 0);
   transition: transform 1s, color 1s;
 }
 
 #year:focus {
   outline: none;
-  color: #666;
+  color: rgb(255, 0, 0);
   transform: scale(1.5);
 }
 
@@ -72,7 +97,6 @@ input::-webkit-inner-spin-button {
 }
 
 .weekdays td {
-  font-size:14px;
   letter-spacing: 2px;
   color: #666;
 }

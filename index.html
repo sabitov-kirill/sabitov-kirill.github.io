@@ -3,51 +3,41 @@
 <head>
   <meta charset="utf-8" />
   <title>SummerPractice'CGSG2021'KS6</title>
+
   <link rel="stylesheet" href="./index.css">
 
+  <script src="https://kit.fontawesome.com/ebb18daa85.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/core.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
-  <script>
-    function setAvatarURL() {
-      let ava = document.getElementById("avatar");
-      ava.src = "https://www.gravatar.com/avatar/" + CryptoJS.MD5("sabkirul@gmail.com").toString();
-    }
-  </script>
+  <script src="script.js"></script>
 </head>
 
-<body onload="setAvatarURL();">
-  <div class="info_pane">
-    <div style="position: relative; width: 100%">
-      <img id="avatar" style="border-radius: 50%; height: 100px; display: block; margin: 15px auto;">
-      <a class="title" style="display: block; font-size: 35px; text-align: center;">Sabitov Kirill<br>10-6</a>
-      <p style="text-align: center;">
-        This page is result of the summer educational and research practice in the Computer Graphics Support Group of
-        the Physics and Mathematics Lyceum #30.
-      </p>
+<body>
+  <div id="background"></div>
+  <div class="container">
+    <div class="about">
+      <img id="avatar"></image>
+      <div class="text">
+        <h2>Sabitov Kirill</h2>
+        <h1>10-6, CGSG'Jr'2021</h1>
+        <p>This page is result of the summer educational and research practice in the Computer Graphics Support Group of the Physics and Mathematics Lyceum #30.</p>
+      </div>
     </div>
 
-    <div style="position: relative; width: 100%; margin-top: 15%; margin: 100px auto 0 auto;">
-      <p class="title">Projects:</p>
-      <form method="LINK" action="https://github.com/CGSG-KS6/branching_task/network">
-        <input type="submit" class="button" value="Merge Commits Repository"
-          style="width: 70%; margin: 5px auto; display: block">
-      </form>
-      <form method="LINK" action="./mandel/mandelbrot.html">
-        <input type="submit" class="button" value="Mandelbrot Set" style="width: 70%; margin: 0 auto; display: block">
-      </form>
-      <form method="LINK" action="./calendar/calendar.html">
-        <input type="submit" class="button" value="Calendar" style="width: 70%; margin: 5px auto; display: block">
-      </form>
-      <form method="LINK" action="./daily_quizes/quizes.html">
-        <input type="submit" class="button" value="Daily Quizes" style="width: 70%; margin: 5px auto; display: block">
-      </form>
-      <form method="LINK" action="https://afternoon-coast-43739.herokuapp.com/">
-        <input type="submit" class="button" value="Chat Service" style="width: 70%; margin: 5px auto; display: block">
-      </form>
+    <div class="projest-list">
+      <h1>Projects: </h1>
+      <a href="./mandel/mandelbrot.html">Mandelbrot Set</a>
+      <a href="./calendar/calendar.html">Simple Calendar</a>
+      <a href="https://github.com/sabitov-kirill/branching_task/network">Merge Commits Repo</a>
+      <a href="" disabled>Chatting Service</a>
+      <a href="https://audio-books-store.herokuapp.com/">Books Shop</a>
     </div>
 
-    <div style="position: relative; width: fit-content; margin: 100% auto 0 auto;">
-      <img src="images/cgsg100.png">
+    <div class="contacts">
+      <a href="https://github.com/sabitov-kirill"><i class="fa-brands fa-2xl fa-github"></i></a>
+      <a href="https://vk.com/ne1mnn"><i class="fa-brands fa-2xl fa-vk"></i></a>
+      <a href="https://t.me/ne1mnn"><i class="fa-brands fa-2xl fa-telegram"></i></a>
+      <a href="https://cgsg.pml30.ru/"><img src="images/cgsg100.png"/></a>
     </div>
   </div>
 </body>

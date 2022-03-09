@@ -15,6 +15,7 @@
   "main": "server.js",
   "devDependencies": {},
   "scripts": {
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
